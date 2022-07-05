@@ -7,11 +7,13 @@ const ul = document.querySelector("ul");
 const ADD_TODO = "ADD_TODO";
 const DELETE_TODO = "DELETE_TODO";
 
+// immutable 해야 함 => 새로운 상태(object)를 리턴
+// store 수정하는 유일한 방법 : action 보내는 방법
+
 const reducer = (state = [], action) => {
-  console.log(action);
   switch (action.type) {
     case ADD_TODO:
-      return [];
+      return [...state, { text: action.text, id: Date.now() }];
     case DELETE_TODO:
       return [];
     default:
@@ -19,6 +21,8 @@ const reducer = (state = [], action) => {
   }
 };
 const store = createStore(reducer);
+
+store.subscribe(() => console.log(store.getState()));
 
 const onSubmit = (e) => {
   e.preventDefault();
