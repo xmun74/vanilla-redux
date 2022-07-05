@@ -7,6 +7,7 @@ const ul = document.querySelector("ul");
 const ADD_TODO = "ADD_TODO";
 const DELETE_TODO = "DELETE_TODO";
 
+// action creator
 const addToDo = (text) => {
   return {
     type: ADD_TODO,
@@ -20,15 +21,17 @@ const deleteToDo = (id) => {
   };
 };
 
-// immutable 해야 함 => 새로운 상태(object)를 리턴
+// immutable 해야 함 => 새로운 상태(object)를 리턴 (spread, filter 사용함)
 // store 수정하는 유일한 방법 : action 보내는 방법
 
 const reducer = (state = [], action) => {
   switch (action.type) {
     case ADD_TODO:
-      return [{ text: action.text, id: Date.now() }, ...state];
+      const newToDoObj = { text: action.text, id: Date.now() };
+      return [newToDoObj, ...state];
     case DELETE_TODO:
-      return state.filter((toDo) => toDo.id !== action.id);
+      const cleaned = state.filter((toDo) => toDo.id !== action.id);
+      return cleaned;
     default:
       return state;
   }
@@ -61,6 +64,7 @@ const paintToDos = () => {
   });
 };
 
+// 새todo 생기면 => li 전체 비우고, 새 li 리페인팅
 store.subscribe(paintToDos);
 
 const onSubmit = (e) => {
