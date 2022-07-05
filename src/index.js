@@ -1,45 +1,30 @@
-//createStore -  바뀌는 state 데이터를 넣는 곳
 import { createStore } from "redux";
 
-const add = document.getElementById("add");
-const minus = document.getElementById("minus");
-const number = document.querySelector("span");
-number.innerText = 0;
+const form = document.querySelector("form");
+const input = document.querySelector("input");
+const ul = document.querySelector("ul");
 
-const ADD = "ADD";
-const MINUS = "MINUS";
+const ADD_TODO = "ADD_TODO";
+const DELETE_TODO = "DELETE_TODO";
 
-// reducer 함수 : data를 변경하는 함수 (초기값 0) , dispatch에 action 전달
-// reducer의 리턴 : application state가 됨
-// action 객체 : reducer 함수의 두번째 인자 {type: 'MINUS'}
-const countModifier = (count = 0, action) => {
+const reducer = (state = [], action) => {
+  console.log(action);
   switch (action.type) {
-    case ADD:
-      return count + 1;
-    case MINUS:
-      return count - 1;
+    case ADD_TODO:
+      return [];
+    case DELETE_TODO:
+      return [];
     default:
-      return count;
+      return state;
   }
 };
+const store = createStore(reducer);
 
-// Store(reducer를 요구함) : 전역 상태 저장소. data를 저장하는 곳
-const countStore = createStore(countModifier);
-// console.log(countStore.getState()); // 0
-
-const onChange = () => {
-  number.innerText = countStore.getState();
-};
-countStore.subscribe(onChange);
-// subscribe - store안에 변화를 알 수 있게 해준다
-
-// dispatch : action 받아옴, type 프로퍼티로 전달해야함
-const handleAdd = () => {
-  countStore.dispatch({ type: ADD });
-};
-const handleMinus = () => {
-  countStore.dispatch({ type: MINUS });
+const onSubmit = (e) => {
+  e.preventDefault();
+  const toDo = input.value;
+  input.value = "";
+  store.dispatch({ type: ADD_TODO, text: toDo });
 };
 
-add.addEventListener("click", handleAdd);
-minus.addEventListener("click", handleMinus);
+form.addEventListener("submit", onSubmit);
