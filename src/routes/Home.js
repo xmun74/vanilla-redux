@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import ToDo from "../components/ToDo";
+import { actionCreators } from "../store";
 
-export default function Home() {
+function Home({ toDos, addToDo }) {
   const [text, setText] = useState("");
   function onChange(e) {
     setText(e.target.value);
@@ -8,7 +11,8 @@ export default function Home() {
   function onSubmit(e) {
     e.preventDefault();
     setText("");
-    console.log(text);
+    addToDo(text);
+    // dispatch(addToDo(text));
   }
   return (
     <>
@@ -17,6 +21,24 @@ export default function Home() {
         <input type="text" value={text} onChange={onChange} />
         <button>Add</button>
       </form>
+      <ul>
+        {toDos.map((toDo) => (
+          <ToDo {...toDo} key={toDo.id} />
+        ))}
+      </ul>
     </>
   );
 }
+
+//mapStateToProps Home에 props전달함. todo render하려고
+function mapStateToProps(state) {
+  return { toDos: state };
+}
+function mapDispatchProps(dispatch) {
+  return {
+    addToDo: (text) => dispatch(actionCreators.addToDo(text)),
+  };
+}
+
+// connect : component와 store를 연경
+export default connect(mapStateToProps, mapDispatchProps)(Home);
